@@ -1,16 +1,16 @@
 # GANSynth-Stereo
 
-This version of GANSynth has been altered to accept stereo files and a single dataset folder as an input pipeline. I also implemented self-attention whenever the generator or discriminator made a spectrogram with an area of 8192 pixels. This is consistent with the original “Self-Attention Generative Adversarial Networks” paper (Zhang et al., 2018) and also consistent with the limits of my memory resources.
+This version of GANSynth has been altered to accept stereo files and a single dataset folder as an input pipeline. I also implemented self-attention whenever the generator or discriminator made a spectrogram with an area of 8192 pixels. This is consistent with the original “Self-Attention Generative Adversarial Networks” paper (Zhang et al., 2018.)
 
-You can use any sample rate as long as all your files are the same length and you don’t exceed 67072 total samples, which is the ceiling for the 128 X 1024 spectrogram implemented in the architecture. 1.5 second samples at 44100 kHz is a good choice. 16-bit only, please. Also, be sure to end all your input files with exactly “.wav” or the algorithm will complain—and no funny characters in the file names, either.
+You can use any sample rate as long as all your files are the same length and you don’t exceed 67072 total samples, which is the ceiling for the 128 X 1024 spectrogram implemented in the architecture. 1.5 second samples at 44100 kHz is a good choice. 16-bit only, please. Also, be sure to end all your input files with exactly “.wav” or the algorithm will complain—and no funny characters or spaces in the file names, either.
 
-I tested the algorithm on Colaboratory/Mac, so you may have to do a bit of file-system tweaking for other configurations. And it doesn’t work on Tensorflow 2 yet, which isn’t is big deal if you include this Python “magic” when you run either the trainer or  the generator:
+I tested the algorithm on Colaboratory/Mac, so you may have to do a bit of file-system tweaking for other configurations. And it doesn’t work on Tensorflow 2 yet, so you'll have to include this Python “magic” when you run either the trainer or the generator:
 
 ```bash
 %tensorflow_version 1.15
 ```
 
-It’s probably overkill, but I included every possible line to stop the invocation of Tensorflow 2, ending up with this training script:
+It’s probably overkill, but I included every possible line to stop the invocation of Tensorflow 2, ending up with this **training** script:
 
 ```bash
 %tensorflow_version 1.15
@@ -24,7 +24,7 @@ Note the “!pip install bezier” line. That’s needed for the attack and rele
 
 There are a ton of hyperparameters originally coded by Google, too, including all the standards like learning rate and number of epochs (referred to as “number of images” in the code.) You can alter these either from the command line or in the model.py file.
 
-Once you’ve trained a model, it’s time to generate. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. For a recent remix, I ended up just generating single MIDI notes and stitching them together in Ableton. The generation script looks something like this:
+Once you’ve trained a model, it’s time to **generate**. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. For a [recent remix](http://soundcloud.com/demonflexcouncil/ymmwina), I ended up just generating single MIDI notes and stitching them together in Ableton. The generation script looks something like this:
 
 ```bash
 %tensorflow_version 1.15
