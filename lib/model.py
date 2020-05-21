@@ -102,10 +102,10 @@ def set_flags(flags):
   # < num_resolutions, pad the schedule in the beginning with first batch size
   # flags.set_if_empty('batch_size_schedule', [16, 8])
   flags.set_if_empty('batch_size_schedule', [8, 8])
-  flags.set_if_empty('stable_stage_num_images', 65536)
-  flags.set_if_empty('transition_stage_num_images', 65536)
-  flags.set_if_empty('total_num_images', 1474560)
-  flags.set_if_empty('save_summaries_num_images', 204800)
+  flags.set_if_empty('stable_stage_num_images', 32)
+  flags.set_if_empty('transition_stage_num_images', 32)
+  flags.set_if_empty('total_num_images', 320)
+  flags.set_if_empty('save_summaries_num_images', 100)
   flags.set_if_empty('train_progressive', True)
   # For fixed-wall-clock-time training, total training time limit in sec.
   # If specified, overrides the iteration limits.

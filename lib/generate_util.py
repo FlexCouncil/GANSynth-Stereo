@@ -131,6 +131,7 @@ def get_envelope(t_note_length,
   
   envelope = np.expand_dims(envelope, axis=1)
   envelope = np.concatenate((envelope, envelope), axis=1)
+  return envelope
 
 # def combine_notes(audio_notes, sample_rate, audio_length, start_times, end_times, velocities):
 def combine_notes(audio_notes,
