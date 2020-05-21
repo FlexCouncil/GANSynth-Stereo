@@ -17,7 +17,7 @@ It’s probably overkill, but I included every possible line to stop the invocat
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 !pip install bezier
-!python gansynth_train.py --hparams='{"train_data_path":"vox", "train_root_dir":"train_root1", "channel_mode":"stereo", "audio_length":1.5, "sample_rate":44100}'
+!python gansynth_train.py --hparams='{"train_data_path":"path", "train_root_dir":"path", "channel_mode":"stereo", "audio_length":1.5, "sample_rate":44100}'
 ```
 
 Note the “!pip install bezier” line. That’s needed for the attack and release envelope curves, a small touch but a nice way to add a bit of musicality to sounds that can be decidedly unmusical. The bottommost line is the most important, particularly the “—hparams” section. This is where you tell the algorithm how to train. “train_data_path” is where your input folder lives. “train_root_dir” is where you want your training files to land. “channel_mode” lets you choose either a mono or a stereo model. The program will convert input files to whatever mode you choose here. “audio_length” is the length of your dataset wavs, in seconds. “sample_rate” is self-explanatory.
@@ -31,10 +31,10 @@ Once you’ve trained a model, it’s time to **generate**. GANSynth uses MIDI f
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 !pip install bezier
-!python gansynth_generate.py --ckpt_dir=train_root1 --output_dir=output --midi_file=midi/063.mid --attack_percent=1 --attack_slope=0.5 --release_percent=1 --release_slope=0.5
+!python gansynth_generate.py --ckpt_dir=path --output_dir=path --midi_file=path --attack_percent=1 --attack_slope=0.5 --release_percent=1 --release_slope=0.5
 ```
 
-You can see that the bottom line looks a little different from the training script. No “—hparams” this time, but the idea is the same—you’re telling the algorithm how you want it to generate audio. That’s about it. If you have any questions, don’t hesitate to contact me.
+You can see that the bottom line looks a little different from the training script. No “—hparams” this time, but the idea is the same—you’re telling the algorithm how you want it to generate audio. "--ckpt_dir" should be the same as "train_data_path" from the training script. "--output_dir" is where you want your generated audio file to go, and "--midi_file" is where your MIDI file lives. Attack and release slopes pertain to the bezier curves--the range is 0 to 1, and higher numbers mean quicker changes. Attack and release percentages (range: 0-100) control fades over the entire length of the note, which means that values above 50 may result in overlapping fades. That’s about it. If you have any questions, don’t hesitate to contact me.
 
 
 
