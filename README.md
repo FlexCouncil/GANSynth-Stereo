@@ -1,6 +1,6 @@
 # GANSynth-Stereo
 
-This version of GANSynth has been altered to accept stereo files and a single dataset folder as an input pipeline. I also implemented self-attention whenever the generator or discriminator made a spectrogram with an area of 8192 pixels. This is consistent with the original “Self-Attention Generative Adversarial Networks” paper (Zhang et al., 2018.)
+Thank you to Google and the Magenta team for making such an excellent neural network synthesizer! This version of GANSynth has been altered to accept stereo files and a single dataset folder as an input pipeline. I also implemented self-attention whenever the generator or discriminator made a spectrogram with an area of 8192 pixels. This is consistent with the original “Self-Attention Generative Adversarial Networks” paper (Zhang et al., 2018.)
 
 You can use any sample rate as long as all your files are the same length and you don’t exceed 67072 total samples, which is the ceiling for the 128 X 1024 spectrogram implemented in the architecture. 1.5 second samples at 44100 kHz is a good choice. 16-bit only, please. Also, be sure to end all your input files with exactly “.wav” or the algorithm will complain—and no funny characters or spaces in the file names, either.
 
