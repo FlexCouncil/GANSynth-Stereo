@@ -1,50 +1,40 @@
-# GANSynth
+# GANSynth-Stereo
 
-GANSynth is an algorithm for synthesizing audio with generative adversarial networks.
-The details can be found in the [ICLR 2019 Paper](https://openreview.net/forum?id=H1xQVn09FX). It achieves better audio quality than a standard WaveNet baselines on the [NSynth Dataset](https://magenta.tensorflow.org/datasets/nsynth), and synthesizes audio thousands of times faster.
+This version of GANSynth has been altered to accept stereo files and a single dataset folder as an input pipeline. I also implemented self-attention whenever the generator or discriminator made a spectrogram with an area of 8192 pixels. This is consistent with the original “Self-Attention Generative Adversarial Networks” paper (Zhang et al., 2018) and also consistent with the limits of my memory resources.
 
-## Generation
+You can use any sample rate as long as all your files are the same length and you don’t exceed 67072 total samples, which is the ceiling for the 128 X 1024 spectrogram implemented in the architecture. 1.5 second samples at 44100 kHz is a good choice. 16-bit only, please. Also, be sure to end all your input files with exactly “.wav” or the algorithm will complain—and no funny characters in the file names, either.
 
-To generate some sounds, first [follow the setup instructions for Magenta](https://github.com/tensorflow/magenta/blob/master/README.md), then download a pretrained checkpoint, or train your own. We have several available for download:
-
-* [acoustic_only](https://storage.googleapis.com/magentadata/models/gansynth/acoustic_only.zip): As shown in the paper, trained on only acoustic instruments pitch 24-84 (Mel-IF, Progressive, High Frequency Resolution).
-
-* [all_instruments](https://storage.googleapis.com/magentadata/models/gansynth/all_instruments.zip): Trained on all instruments pitch 24-84 (Mel-IF, Progressive, High Frequency Resolution).
-
-You can start by generating some random sounds (random pitch and latent vector) by unzipping the checkpoint and running the generate script from the root of the Magenta directory.
+I tested the algorithm on Colaboratory/Mac, so you may have to do a bit of file-system tweaking for other configurations. And it doesn’t work on Tensorflow 2 yet, which isn’t is big deal if you include this Python “magic” when you run either the trainer or  the generator:
 
 ```bash
-python magenta/models/gansynth/gansynth_generate.py --ckpt_dir=/path/to/acoustic_only --output_dir=/path/to/output/dir --midi_file=/path/to/file.mid
+%tensorflow_version 1.15
 ```
 
-If a MIDI file is specified, notes are synthesized with interpolation between latent vectors in time. If no MIDI file is given, a random batch of notes is synthesized.
-
-If you've installed from the pip package, it will install a console script so you can run from anywhere.
-```bash
-gansynth_generate --ckpt_dir=/path/to/acoustic_only --output_dir=/path/to/output/dir --midi_file=/path/to/file.mid
-```
-
-
-## Training
-
-GANSynth can train on the NSynth dataset in ~3-4 days on a single V100 GPU. To train, first [follow the setup instructions for Magenta](https://github.com/tensorflow/magenta/blob/master/README.md), using the install or develop environment. Then download the [NSynth Datasets](https://magenta.tensorflow.org/datasets/nsynth) as TFRecords.
-
-To test that training works, run from the root of the Magenta repo directory:
+It’s probably overkill, but I included every possible line to stop the invocation of Tensorflow 2, ending up with this training script:
 
 ```bash
-python magenta/models/gansynth/gansynth_train.py --hparams='{"train_data_path":"/path/to/nsynth-train.tfrecord", "train_root_dir":"/tmp/gansynth/train"}'
+%tensorflow_version 1.15
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+!pip install bezier
+!python gansynth_train.py --hparams='{"train_data_path":"vox", "train_root_dir":"train_root1", "channel_mode":"stereo", "audio_length":1.5, "sample_rate":44100}'
 ```
 
-This will run the model with suitable hyperparmeters for quickly testing training (which you can find in `model.py`). The best performing hyperparmeter configuration from the paper _(Mel-Spectrograms, Progressive Training, High Frequency Resolution)_, can be found in `configs/mel_prog_hires.py`. You can train with this config by adding it as a flag:
+Note the “!pip install bezier” line. That’s needed for the attack and release envelope curves, a small touch but a nice way to add a bit of musicality to sounds that can be decidedly unmusical. The bottommost line is the most important, particularly the “—hparams” section. This is where you tell the algorithm how to train. “train_data_path” is where your input folder lives. “train_root_dir” is where you want your training files to land. “channel_mode” lets you choose either a mono or a stereo model. The program will convert input files to whatever mode you choose here. “audio_length” is the length of your dataset wavs, in seconds. “sample_rate” is self-explanatory.
+
+There are a ton of hyperparameters originally coded by Google, too, including all the standards like learning rate and number of epochs (referred to as “number of images” in the code.) You can alter these either from the command line or in the model.py file.
+
+Once you’ve trained a model, it’s time to generate. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. For a recent remix, I ended up just generating single MIDI notes and stitching them together in Ableton. The generation script looks something like this:
 
 ```bash
-python magenta/models/gansynth/gansynth_train.py --config=mel_prog_hires --hparams='{"train_data_path":"/path/to/nsynth-train.tfrecord", "train_root_dir":"/tmp/gansynth/train"}'
+%tensorflow_version 1.15
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+!pip install bezier
+!python gansynth_generate.py --ckpt_dir=train_root1 --output_dir=output --midi_file=midi/063.mid --attack_percent=1 --attack_slope=0.5 --release_percent=1 --release_slope=0.5
 ```
 
-You can also alter it or make other configs to explore the other representations. As a reminder, the full list of hyperparameters can be found in `model.py`. By default, the model trains only on acoustic instruments pitch 24-84 as in the paper. This can be changed in `datasets.py`.
+You can see that the bottom line looks a little different from the training script. No “—hparams” this time, but the idea is the same—you’re telling the algorithm how you want it to generate audio. That’s about it. If you have any questions, don’t hesitate to contact me.
 
-If you've installed from the pip package, it will install a console script so you can run from anywhere.
-```bash
-gansynth_train --config=mel_prog_hires --hparams='{"train_data_path":"/path/to/nsynth-train.tfrecord", "train_root_dir":"/tmp/gansynth/train"}'
-```
+
 
