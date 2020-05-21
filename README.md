@@ -20,7 +20,7 @@ tf.disable_v2_behavior()
 !python gansynth_train.py --hparams='{"train_data_path":"path", "train_root_dir":"path", "channel_mode":"stereo", "audio_length":1.5, "sample_rate":44100}'
 ```
 
-Note the “!pip install bezier” line. That’s needed for the attack and release envelope curves, a small touch but a nice way to add a bit of musicality to sounds that can be decidedly unmusical. The bottommost line is the most important, particularly the “—hparams” section. This is where you tell the algorithm how to train. “train_data_path” is where your input folder lives. “train_root_dir” is where you want your training files to land. “channel_mode” lets you choose either a mono or a stereo model. The program will convert input files to whatever mode you choose here. “audio_length” is the length of your dataset wavs, in seconds. “sample_rate” is self-explanatory.
+Note the “!pip install bezier” line. That’s needed for the attack and release envelope curves. The bottommost line is the most important, particularly the “—hparams” section. This is where you tell the algorithm how to train. “train_data_path” is where your input folder lives. “train_root_dir” is where you want your training files to land. “channel_mode” lets you choose either a mono or a stereo model. The program will convert input files to whatever mode you choose here. “audio_length” is the length of your dataset wavs, in seconds. “sample_rate” is self-explanatory.
 
 There are a ton of hyperparameters originally coded by Google, too, including all the standards like learning rate and number of epochs (referred to as “number of images” in the code.) You can alter these either from the command line or in the model.py file.
 
