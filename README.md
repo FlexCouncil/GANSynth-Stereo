@@ -24,7 +24,7 @@ Note the “!pip install bezier” line. That’s needed for the attack and rele
 
 There are a ton of hyperparameters originally coded by Google, too, including all the standards like learning rate and number of epochs (referred to as “number of images” in the code.) You can alter these either from the command line or in the "model.py" file.
 
-Once you’ve trained a model, it’s time to **generate**. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. For a [recent remix](http://soundcloud.com/demonflexcouncil/ymmwina), I ended up just generating single MIDI notes and stitching them together in Ableton. The generation script looks something like this:
+Once you’ve trained a model, it’s time to **generate**. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. For a [recent remix](http://soundcloud.com/flexcouncil/ymmwina), I ended up just generating single MIDI notes and stitching them together in Ableton. The generation script looks something like this:
 
 ```bash
 %tensorflow_version 1.15
