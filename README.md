@@ -1,4 +1,4 @@
-# GANSynth-Stereo
+# GANSynth Stereo
 
 Thank you to Google and the Magenta team for making such an excellent neural network synthesizer! This version of GANSynth has been altered to accept stereo files and a single dataset folder as an input pipeline. I also implemented self-attention whenever the generator or discriminator made a spectrogram with an area of 8192 pixels. This is consistent with the original “Self-Attention Generative Adversarial Networks” paper (Zhang et al., 2018.)
 
