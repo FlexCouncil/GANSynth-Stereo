@@ -30,7 +30,7 @@ tf.disable_v2_behavior()
 !python gansynth_generate.py --ckpt_dir=path --output_dir=path --midi_file=path --attack_percent=1 --attack_slope=0.5 --release_percent=1 --release_slope=0.5
 ```
 
-You can see that the bottom line looks a little different from the training script. There are no “—hparams” this time, but the idea is the same—you’re telling the algorithm how you want it to generate audio. "--ckpt_dir" should be the same as "train_data_path" from the training script. "--output_dir" is where you want your generated audio file to go, and "--midi_file" is where your MIDI file lives. Attack and release slopes pertain to the bezier curves--the range is 0 to 1, and higher numbers mean quicker changes. Attack and release percentages (range: 0-100) control fades over the entire length of the note, which means that values above 50 may result in overlapping fades.
+You can see that the bottom line is different from the training script. There are no “—hparams” this time, but the idea is the same—you’re telling the algorithm how you want it to generate audio. "--ckpt_dir" should be the same as "train_data_path" from the training script. "--output_dir" is where you want your generated audio file to go, and "--midi_file" is where your MIDI file lives. "--attack_slope" and "--release_slope" pertain to the bezier curves--the range is 0 to 1, and higher numbers mean quicker changes. "--attack_percent" and "--release_percent" (range: 0-100) control fades over the entire length of the note, which means that values above 50 may result in overlapping fades.
 
 
 
