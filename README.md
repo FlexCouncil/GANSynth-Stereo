@@ -4,13 +4,13 @@ Thank you to Google and the Magenta team for making such an excellent neural net
 
 You can use any sample rate as long as all your files are the same length and you don’t exceed 67072 total samples, which is the ceiling for the 128 X 1024 spectrogram implemented in the architecture. 1.5 second samples at 44100 kHz is a good choice. 16-bit only, please. Also, be sure to end all your input files with exactly “.wav” or the algorithm will complain—and no funny characters or spaces in the file names, either.
 
-I tested the algorithm on Colaboratory/Mac, so you may have to do a bit of file-system tweaking for other configurations. And it doesn’t work on Tensorflow 2 yet, so you'll have to include this Python “magic” when you run either the trainer or the generator:
+I tested the algorithm on Colaboratory/Mac, so you may have to do a bit of file-system tweaking for other configurations. And only works on TensorFlow version 1.15 and below, so you'll have to include this Python “magic” when you run either the trainer or the generator:
 
 ```bash
 %tensorflow_version 1.15
 ```
 
-It’s probably overkill, but I included every possible line to stop the invocation of Tensorflow 2, ending up with this **training** script:
+I included every possible line to stop the invocation of Tensorflow 2, ending up with this **training** script:
 
 ```bash
 %tensorflow_version 1.15
@@ -22,9 +22,9 @@ tf.disable_v2_behavior()
 
 Note the “!pip install bezier” line. That’s needed for the attack and release envelope curves. The bottommost line is the most important, particularly the “—hparams” section. This is where you tell the algorithm how to train. “train_data_path” is where your input folder lives. “train_root_dir” is where you want your training files to land. “channel_mode” lets you choose either a mono or a stereo model. The program will convert input files to whatever mode you choose here. “audio_length” is the length of your dataset wavs, in seconds. “sample_rate” is self-explanatory.
 
-There are a ton of hyperparameters originally coded by Google, too, including all the standards like learning rate and number of epochs (referred to as “number of images” in the code.) You can alter these either from the command line or in the "model.py" file.
+There are many hyperparameters originally coded by Google, too, including all the standards like learning rate and number of epochs (referred to as “number of images” in the code.) You can alter these either from the command line or in the "model.py" file.
 
-Once you’ve trained a model, it’s time to **generate**. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. For a [recent remix](http://soundcloud.com/flexcouncil/ymmwina), I ended up just generating single MIDI notes and stitching them together in Ableton. The generation script looks something like this:
+Once you’ve trained a model, it’s time to **generate**. GANSynth uses MIDI files for this purpose, and it can be finicky about what MIDI it likes. If you’re getting errors, try increasing the note length. The generation script looks something like this:
 
 ```bash
 %tensorflow_version 1.15
